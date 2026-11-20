@@ -1,0 +1,4 @@
+# 本地调试专用（线上由 Makers 平台托管，不需要这些）
+fastapi>=0.110.0
+uvicorn>=0.29.0
+python-dotenv>=1.0.0

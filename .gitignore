@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# 本地私密配置：密钥不入库（部署平台会自动注入 AI_GATEWAY_API_KEY）
+.env
+
+# 本地会话数据
+data/
+
+# IDE
+.idea/
+.vscode/

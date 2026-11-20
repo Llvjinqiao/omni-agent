@@ -1,0 +1,9 @@
+{
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "agents": {
+    "framework": "langgraph",
+    "dir": "agents",
+    "timeout": 300
+  }
+}
