@@ -119,6 +119,29 @@ def make_tools(env) -> list:
         return f"[成功] 当前时间：{stamp}，星期{weekdays[now.weekday()]}（UTC+{utc_offset}）"
 
     @tool
+    def days_until(target: str, utc_offset: int = 8) -> str:
+        """精确计算「距离某一天还有多少天」或「某一天距今多少天」，直接给天数，不用自己拆月份。
+
+        凡是问「还有多少天」「多少天后」「倒计时」「距今多久」一律用本工具，禁止用 calculator 手拆日期。
+        目标日期必须是 YYYY-MM-DD 格式；只写月日的（如「元旦」「春节」）先补上即将到来的那一年。
+
+        Args:
+            target: 目标日期，格式 YYYY-MM-DD，例如 2027-01-01。
+            utc_offset: 时区偏移小时数，默认 8（北京时间）。
+        """
+        try:
+            today = datetime.now(timezone(timedelta(hours=utc_offset))).date()
+            t = datetime.strptime(target.strip(), "%Y-%m-%d").date()
+        except Exception as exc:  # noqa: BLE001
+            return f"[失败] 目标日期格式不合法（应为 YYYY-MM-DD）：{exc}"
+        delta = (t - today).days
+        if delta > 0:
+            return f"[成功] 从今天（{today.isoformat()}）到 {target} 还有 {delta} 天。"
+        if delta < 0:
+            return f"[成功] {target} 距今天（{today.isoformat()}）已过去 {-delta} 天。"
+        return f"[成功] {target} 就是今天。"
+
+    @tool
     async def generate_image(prompt: str, size: str = "1024*1024") -> str:
         """根据文字描述生成一张图片（AI 文生图）。用户说"画一张/生成图片/做一张图"时调用。
 
@@ -182,7 +205,7 @@ def make_tools(env) -> list:
             return f"[失败] 生图出错：{type(exc).__name__}: {exc}"
         return f"[失败] 生图鉴权失败：所有 key 均返回 {last_err}。"
 
-    return [web_search, fetch_webpage, calculator, current_time, generate_image]
+    return [web_search, fetch_webpage, calculator, current_time, days_until, generate_image]
 
 
 # ---------- 计算器：AST 白名单求值，杜绝 eval 任意代码 ----------
