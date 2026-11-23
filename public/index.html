@@ -407,7 +407,8 @@ const input = document.getElementById("input");
 const sendBtn = document.getElementById("send");
 const resetBtn = document.getElementById("reset");
 
-let conversationId = localStorage.getItem("omni_cid") || localStorage.getItem("xq_cid") || "";
+let conversationId = localStorage.getItem("omni_cid") || localStorage.getItem("xq_cid") || crypto.randomUUID();
+if (conversationId) localStorage.setItem("omni_cid", conversationId);
 let busy = false;
 
 /* 工具名 → 中文标签 + 光谱色 */
@@ -669,8 +670,8 @@ function addCopy(bubble) {
 /* 新对话 */
 resetBtn.onclick = () => {
   if (busy) return;
-  conversationId = "";
-  localStorage.removeItem("omni_cid");
+  conversationId = crypto.randomUUID();
+  localStorage.setItem("omni_cid", conversationId);
   localStorage.removeItem("xq_cid");
   list.innerHTML = "";
   showHero();
