@@ -153,7 +153,8 @@ def make_tools(env) -> list:
                         },
                     )
                     if resp.status_code == 401:
-                        last_err = "401 未授权"
+                        # 保留原始返回体，便于定位到底是 DashScope 拒绝还是平台沙箱拦截
+                        last_err = f"401 未授权（返回体：{resp.text[:200]}）"
                         continue  # 该 key 被平台拒绝，换下一个再试
                     resp.raise_for_status()
                     task_id = (resp.json().get("output") or {}).get("task_id")
